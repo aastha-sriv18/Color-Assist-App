@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@id/navigation_home">
 
     <fragment
         android:id="@+id/navigation_home"
@@ -12,14 +12,18 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.aastha.colorassistapp.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_charts"
+        android:name="com.aastha.colorassistapp.ui.charts.DashboardFragment"
+        tools:layout="@layout/fragment_charts" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.aastha.colorassistapp.ui.notifications.NotificationsFragment"
+        android:id="@+id/navigation_marine"
+        android:name="com.aastha.colorassistapp.ui.marine.MarineFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_marine" />
+    <fragment
+        android:id="@+id/navigation_emails"
+        android:name="com.aastha.colorassistapp.fragment_emails"
+        android:label="fragment_emails"
+        tools:layout="@layout/fragment_emails" />
 </navigation>
