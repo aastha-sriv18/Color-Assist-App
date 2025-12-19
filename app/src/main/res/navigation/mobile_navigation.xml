@@ -13,13 +13,14 @@
 
     <fragment
         android:id="@+id/navigation_charts"
-        android:name="com.aastha.colorassistapp.ui.charts.DashboardFragment"
+        android:name="com.aastha.colorassistapp.ui.charts.ChartsFragment"
+        android:label="@string/title_charts"
         tools:layout="@layout/fragment_charts" />
 
     <fragment
         android:id="@+id/navigation_marine"
         android:name="com.aastha.colorassistapp.ui.marine.MarineFragment"
-        android:label="@string/title_notifications"
+        android:label="@string/title_marine"
         tools:layout="@layout/fragment_marine" />
     <fragment
         android:id="@+id/navigation_emails"

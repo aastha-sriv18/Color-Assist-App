@@ -9,7 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.aastha.colorassistapp.databinding.FragmentChartsBinding;
 
 public class ChartsFragment extends Fragment {
