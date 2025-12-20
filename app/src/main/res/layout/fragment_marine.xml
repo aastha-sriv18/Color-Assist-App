@@ -75,6 +75,6 @@
             android:layout_marginLeft="12dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="12dp"
-            android:entries="test_names" />
+            android:entries="@array/test_names" />
     </LinearLayout>
 </LinearLayout>

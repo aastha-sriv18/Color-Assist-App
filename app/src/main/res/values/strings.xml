@@ -5,10 +5,4 @@
     <string name="title_charts">title_charts</string>
     <string name="title_marine">title_marine</string>
     <string name="title_emails">title_emails</string>
-    <string-array name="test_names">
-        <item>Ph Test</item>
-        <item>Nitrate Test</item>
-        <item>Chlorophyll Test</item>
-        <item>Ammonia Test</item>
-    </string-array>
 </resources>

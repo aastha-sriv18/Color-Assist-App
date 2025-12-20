@@ -1,0 +1,8 @@
+<resources>
+    <string-array name="test_names">
+        <item>pH Test</item>
+        <item>Nitrate Test</item>
+        <item>Ammonia Test</item>
+        <item>Chlorophyll Test</item>
+    </string-array>
+</resources>
