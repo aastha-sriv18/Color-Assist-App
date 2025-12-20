@@ -1,80 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:paddingTop="80dp"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="12dp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        tools:context=".ui.marine.MarineFragment">
 
         <TextView
-            android:id="@+id/marineHeadingTxt"
+            android:id="@+id/text_marine"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="12dp"
-            android:paddingTop="10dp"
-            android:text="Water Tests"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:textAlignment="center"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/descTxt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="12dp"
-            android:paddingTop="10dp"
-            android:paddingRight="12dp"
-            android:text="This page helps identify water tests such as ph test, nitrate test, ammonia test and chlorophyll test." />
+        <!-- Put the rest of your marine content here -->
 
-        <TextView
-            android:id="@+id/uploadTxt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="12dp"
-            android:paddingTop="10dp"
-            android:text="Upload Image" />
-
-        <Button
-            android:id="@+id/uploadBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
-            android:text="Upload Image" />
-
-        <ImageView
-            android:id="@+id/imageViewMarine"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:scaleType="fitCenter"
-            tools:src="@tools:sample/avatars" />
-
-        <TextView
-            android:id="@+id/selectTestTxt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="12dp"
-            android:text="Select Test Type" />
-
-        <Spinner
-            android:id="@+id/dropdown"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="12dp"
-            android:entries="@array/test_names" />
     </LinearLayout>
-</LinearLayout>
+</ScrollView>
