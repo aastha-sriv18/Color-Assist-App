@@ -2,15 +2,11 @@ package com.aastha.colorassistapp.ui.charts;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-import android.widget.ImageView;
 
 import androidx.appcompat.widget.AppCompatImageView;
 
@@ -19,18 +15,15 @@ public class ColorblindnessSimulationView extends AppCompatImageView {
     private Bitmap originalBitmap;
     private Bitmap transformedBitmap;
     private ColorblindnessMode colorblindnessMode = ColorblindnessMode.NONE;
-    private float currentScale = 1.0f;
+
+    private final Matrix imageMatrix = new Matrix();
+    private final float[] matrixValues = new float[9];
+
     private float minScale = 1.0f;
     private float maxScale = 5.0f;
 
-    private float translateX = 0f;
-    private float translateY = 0f;
-
     private ScaleGestureDetector scaleGestureDetector;
     private GestureDetector gestureDetector;
-    private Paint paint;
-
-    private static final String TAG = "ColorblindnessView";
 
     public enum ColorblindnessMode {
         NONE,
@@ -57,55 +50,53 @@ public class ColorblindnessSimulationView extends AppCompatImageView {
     private void init() {
         setScaleType(ScaleType.MATRIX);
 
-        paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setFilterBitmap(true);
-
         scaleGestureDetector = new ScaleGestureDetector(getContext(), new ScaleListener());
         gestureDetector = new GestureDetector(getContext(), new GestureListener());
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        // Let our detectors handle the event
         scaleGestureDetector.onTouchEvent(event);
         gestureDetector.onTouchEvent(event);
+
+        // Ask parent (e.g. ScrollView) not to intercept while interacting
+        getParent().requestDisallowInterceptTouchEvent(true);
+
         return true;
     }
 
     public void setBitmap(Bitmap bitmap) {
         if (bitmap != null) {
-            this.originalBitmap = bitmap;
+            originalBitmap = bitmap;
             transformBitmap();
-            updateImageViewMatrix();
+            configureInitialMatrix();
             invalidate();
         }
     }
 
     public void setColorblindnessMode(ColorblindnessMode mode) {
-        this.colorblindnessMode = mode;
+        colorblindnessMode = mode;
         if (originalBitmap != null) {
             transformBitmap();
-            updateImageViewMatrix();
+            configureInitialMatrix();
             invalidate();
         }
     }
 
     private void transformBitmap() {
-        if (originalBitmap == null) {
-            return;
-        }
+        if (originalBitmap == null) return;
 
-        // Create a mutable copy of the original bitmap
         transformedBitmap = originalBitmap.copy(originalBitmap.getConfig(), true);
 
-        // Apply colorblindness transformation pixel by pixel
         int width = transformedBitmap.getWidth();
         int height = transformedBitmap.getHeight();
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 int pixel = transformedBitmap.getPixel(x, y);
-                int transformedPixel = ColorTransformer.transformColor(pixel, convertMode(colorblindnessMode));
+                int transformedPixel =
+                        ColorTransformer.transformColor(pixel, convertMode(colorblindnessMode));
                 transformedBitmap.setPixel(x, y, transformedPixel);
             }
         }
@@ -127,68 +118,152 @@ public class ColorblindnessSimulationView extends AppCompatImageView {
         }
     }
 
-    private void updateImageViewMatrix() {
-        Matrix matrix = new Matrix();
-        matrix.postScale(currentScale, currentScale);
-        matrix.postTranslate(translateX, translateY);
-        setImageMatrix(matrix);
+    /**
+     * Called to fit the image initially (or after bitmap change) similar to CENTER_CROP / FIT_CENTER.
+     */
+    private void configureInitialMatrix() {
+        if (transformedBitmap == null) return;
+        if (getWidth() == 0 || getHeight() == 0) return;
+
+        imageMatrix.reset();
+
+        float viewWidth = getWidth();
+        float viewHeight = getHeight();
+        float bmWidth = transformedBitmap.getWidth();
+        float bmHeight = transformedBitmap.getHeight();
+
+        // Fit center: scale so the image fully fits inside the view
+        float scale = Math.min(viewWidth / bmWidth, viewHeight / bmHeight);
+        minScale = scale;
+
+        float dx = (viewWidth - bmWidth * scale) / 2f;
+        float dy = (viewHeight - bmHeight * scale) / 2f;
+
+        imageMatrix.postScale(scale, scale);
+        imageMatrix.postTranslate(dx, dy);
+
+        setImageMatrix(imageMatrix);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        // Recalculate initial placement when view size changes
+        configureInitialMatrix();
+    }
+
+    private float getCurrentScale() {
+        imageMatrix.getValues(matrixValues);
+        return matrixValues[Matrix.MSCALE_X]; // assuming uniform scaling
+    }
+
+    private void clampTranslation() {
+        if (transformedBitmap == null) return;
+
+        float viewWidth = getWidth();
+        float viewHeight = getHeight();
+        float bmWidth = transformedBitmap.getWidth();
+        float bmHeight = transformedBitmap.getHeight();
+
+        imageMatrix.getValues(matrixValues);
+        float scale = matrixValues[Matrix.MSCALE_X];
+        float transX = matrixValues[Matrix.MTRANS_X];
+        float transY = matrixValues[Matrix.MTRANS_Y];
+
+        float scaledWidth = bmWidth * scale;
+        float scaledHeight = bmHeight * scale;
+
+        float minX, maxX, minY, maxY;
+
+        if (scaledWidth <= viewWidth) {
+            // Center horizontally
+            minX = maxX = (viewWidth - scaledWidth) / 2f;
+        } else {
+            // Allow pan within bounds
+            minX = viewWidth - scaledWidth;
+            maxX = 0f;
+        }
+
+        if (scaledHeight <= viewHeight) {
+            // Center vertically
+            minY = maxY = (viewHeight - scaledHeight) / 2f;
+        } else {
+            minY = viewHeight - scaledHeight;
+            maxY = 0f;
+        }
+
+        float clampedX = Math.min(Math.max(transX, minX), maxX);
+        float clampedY = Math.min(Math.max(transY, minY), maxY);
+
+        matrixValues[Matrix.MTRANS_X] = clampedX;
+        matrixValues[Matrix.MTRANS_Y] = clampedY;
+        imageMatrix.setValues(matrixValues);
     }
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
+            if (transformedBitmap == null) return false;
+
             float scaleFactor = detector.getScaleFactor();
-            currentScale *= scaleFactor;
+            float currentScale = getCurrentScale();
+            float newScale = currentScale * scaleFactor;
 
-            // Clamp the scale value
-            currentScale = Math.max(minScale, Math.min(currentScale, maxScale));
+            // Clamp scale
+            newScale = Math.max(minScale, Math.min(newScale, maxScale));
+            scaleFactor = newScale / currentScale;
 
-            updateImageViewMatrix();
+            // Zoom around the gesture's focus point (pinch center)
+            imageMatrix.postScale(scaleFactor, scaleFactor,
+                    detector.getFocusX(),
+                    detector.getFocusY());
+
+            clampTranslation();
+            setImageMatrix(imageMatrix);
+            invalidate();
             return true;
         }
     }
 
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            if (currentScale > minScale) { // Allow scrolling only when zoomed in
-                translateX -= distanceX;
-                translateY -= distanceY;
+        public boolean onScroll(MotionEvent e1, MotionEvent e2,
+                                float distanceX, float distanceY) {
+            if (transformedBitmap == null) return false;
 
-                // Clamp translation values to prevent scrolling too far
-                if (transformedBitmap != null) {
-                    float maxTranslateX = (currentScale - 1) * getWidth() / 2;
-                    float maxTranslateY = (currentScale - 1) * getHeight() / 2;
-
-                    translateX = Math.max(-maxTranslateX, Math.min(translateX, maxTranslateX));
-                    translateY = Math.max(-maxTranslateY, Math.min(translateY, maxTranslateY));
-                }
-
-                updateImageViewMatrix();
+            // Only pan when zoomed in beyond minScale
+            if (getCurrentScale() > minScale) {
+                imageMatrix.postTranslate(-distanceX, -distanceY);
+                clampTranslation();
+                setImageMatrix(imageMatrix);
+                invalidate();
             }
             return true;
         }
 
         @Override
         public boolean onDoubleTap(MotionEvent e) {
-            // Double tap to reset zoom
+            float currentScale = getCurrentScale();
             if (currentScale > minScale) {
-                currentScale = minScale;
-                translateX = 0f;
-                translateY = 0f;
+                // Reset to initial fit
+                configureInitialMatrix();
             } else {
-                currentScale = minScale * 2;
+                // Zoom in around double-tap point
+                float targetScale = Math.min(minScale * 2f, maxScale);
+                float factor = targetScale / currentScale;
+
+                imageMatrix.postScale(factor, factor, e.getX(), e.getY());
+                clampTranslation();
+                setImageMatrix(imageMatrix);
+                invalidate();
             }
-            updateImageViewMatrix();
             return true;
         }
     }
 
     public void resetZoom() {
-        currentScale = minScale;
-        translateX = 0f;
-        translateY = 0f;
-        updateImageViewMatrix();
+        configureInitialMatrix();
+        invalidate();
     }
 
     public ColorblindnessMode getColorblindnessMode() {

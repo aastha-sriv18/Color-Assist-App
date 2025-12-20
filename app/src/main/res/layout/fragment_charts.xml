@@ -1,47 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:paddingTop="80dp"
     tools:context=".ui.charts.ChartsFragment">
 
-    <!-- Upload Chart Button -->
-    <Button
-        android:id="@+id/btn_upload_chart"
+    <!-- Top controls: scroll if needed -->
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp"
-        android:text="Upload Chart Image"
-        android:textSize="16sp"
-        android:layout_marginBottom="12dp" />
+        android:fillViewport="true">
 
-    <!-- Colorblindness Mode Spinner -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="12dp"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Vision Mode:"
-            android:textSize="14sp"
-            android:layout_marginEnd="8dp" />
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <Spinner
-            android:id="@+id/spinner_colorblindness"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-    </LinearLayout>
+            <!-- Upload Chart Button -->
+            <Button
+                android:id="@+id/btn_upload_chart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:text="Upload Chart Image"
+                android:textSize="16sp"
+                android:layout_marginBottom="12dp" />
 
-    <!-- Chart Display Area (Scrollable) -->
+            <!-- Colorblindness Mode Spinner -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vision Mode:"
+                    android:textSize="14sp"
+                    android:layout_marginEnd="8dp" />
+
+                <Spinner
+                    android:id="@+id/spinner_colorblindness"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <!-- Info Text (above chart if you want) -->
+            <TextView
+                android:id="@+id/info_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Upload a chart and select a vision mode. Pinch to zoom, swipe to pan."
+                android:textAlignment="center"
+                android:textSize="12sp"
+                android:layout_marginTop="8dp"
+                android:textColor="@android:color/darker_gray" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom: full zoomable chart area, not inside ScrollView -->
     <FrameLayout
+        android:id="@+id/chart_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -51,19 +77,7 @@
             android:id="@+id/chart_simulation_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/app_name"
-            android:scaleType="fitCenter" />
+            android:contentDescription="@string/app_name" />
     </FrameLayout>
-
-    <!-- Info Text -->
-    <TextView
-        android:id="@+id/info_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Upload a chart and select a vision mode. Pinch to zoom, swipe to pan."
-        android:textAlignment="center"
-        android:textSize="12sp"
-        android:layout_marginTop="12dp"
-        android:textColor="@android:color/darker_gray" />
 
 </LinearLayout>
