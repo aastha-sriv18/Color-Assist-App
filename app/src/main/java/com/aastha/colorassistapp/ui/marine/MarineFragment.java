@@ -33,8 +33,10 @@ public class MarineFragment extends Fragment {
     private ImageView imageViewMarine;
     private Spinner spinner;
     private Uri selectedImageUri;
-
+    private Button generateBtn;
+    private String selectedTest = "";
     private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class MarineFragment extends Fragment {
         uploadBtn = view.findViewById(R.id.uploadBtn);
         imageViewMarine = view.findViewById(R.id.imageViewMarine);
         spinner = view.findViewById(R.id.dropdown);
+        generateBtn = view.findViewById(R.id.generateBtn);
 
         // Hide image initially
         imageViewMarine.setVisibility(View.GONE);
@@ -94,29 +97,19 @@ public class MarineFragment extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedTest = parent.getItemAtPosition(position).toString();
+                String test = parent.getItemAtPosition(position).toString();
                 Toast.makeText(getContext(), "Selected: " + selectedTest, Toast.LENGTH_SHORT).show();
 
-                // Call corresponding empty test functions
-                switch (selectedTest.toLowerCase()) {
-                    case "ph test":
-                        performPhTest();
-                        break;
-                    case "nitrate test":
-                        performNitrateTest();
-                        break;
-                    case "chlorophyll test":
-                        performChlorophyllTest();
-                        break;
-                    case "ammonia test":
-                        performAmmoniaTest();
-                        break;
+                if (position == 0) { // placeholder "Select Test"
+                    selectedTest = "";
+                } else {
+                    selectedTest = test;
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // Do nothing
+                selectedTest = "";
             }
         });
     }
@@ -152,7 +145,35 @@ public class MarineFragment extends Fragment {
         }
     }
 
-    // 🧪 Placeholder functions (currently empty, but won’t crash)
+    // Generate button runs the selected test
+    generateBtn.setOnClickListener(v -> {
+            if (selectedImageUri == null) {
+                Toast.makeText(getContext(), "Please upload an image first", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (selectedTest.isEmpty()) {
+                Toast.makeText(getContext(), "Please select a test", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            switch (selectedTest.toLowerCase()) {
+                case "ph test":
+                    performPhTest();
+                    break;
+                case "nitrate test":
+                    performNitrateTest();
+                    break;
+                case "chlorophyll test":
+                    performChlorophyllTest();
+                    break;
+                case "ammonia test":
+                    performAmmoniaTest();
+                    break;
+            }
+    });
+
+    // Placeholder functions (currently empty)
     private void performPhTest() {
         // TODO: Implement logic for pH test
     }
