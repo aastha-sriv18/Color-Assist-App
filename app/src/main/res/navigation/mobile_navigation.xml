@@ -24,7 +24,7 @@
         tools:layout="@layout/fragment_marine" />
     <fragment
         android:id="@+id/navigation_emails"
-        android:name="com.aastha.colorassistapp.fragment_emails"
+        android:name="com.aastha.colorassistapp.EmailsFragment"
         android:label="fragment_emails"
         tools:layout="@layout/fragment_emails" />
 </navigation>
