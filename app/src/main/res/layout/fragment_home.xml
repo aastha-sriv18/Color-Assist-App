@@ -19,20 +19,42 @@
             android:padding="16dp">
 
             <!-- Pick Image Button -->
+            <TextView
+                android:id="@+id/headingHomeTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Color Identifier"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
             <Button
                 android:id="@+id/btn_pick_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
                 android:padding="12dp"
                 android:text="Pick an Image from Gallery"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                app:cornerRadius="50dp" />
 
             <!-- Image Container (FrameLayout for overlays) -->
+            <TextView
+                android:id="@+id/info_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="Tap on the image to pick colors"
+                android:textAlignment="center"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="16sp" />
+
             <FrameLayout
                 android:id="@+id/image_container"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:minHeight="300dp">
@@ -55,25 +77,19 @@
 
             <!-- Info Text -->
             <!-- Info Text -->
-            <TextView
-                android:id="@+id/info_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Tap on the image to pick colors"
-                android:textAlignment="center"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/btn_colorhexa"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:layout_marginTop="12dp"
+                android:layout_marginRight="20dp"
                 android:padding="12dp"
                 android:text="View on ColorHexa"
                 android:textSize="14sp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                app:cornerRadius="50dp" />
 
 
         </LinearLayout>

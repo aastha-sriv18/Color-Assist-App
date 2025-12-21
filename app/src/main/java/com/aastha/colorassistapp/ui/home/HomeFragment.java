@@ -38,6 +38,7 @@ public class HomeFragment extends Fragment {
     private TextView infoText;
     private Bitmap currentBitmap;
     private String lastHexColor;
+    private TextView headingHomeTxt;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
 
     @Override
@@ -66,6 +67,7 @@ public class HomeFragment extends Fragment {
         imageView = view.findViewById(R.id.image_view);
         pixelIndicator = view.findViewById(R.id.pixel_indicator);
         infoText = view.findViewById(R.id.info_text);
+        headingHomeTxt = view.findViewById(R.id.headingHomeTxt);
         Button pickImageBtn = view.findViewById(R.id.btn_pick_image);
         Button colorHexaBtn = view.findViewById(R.id.btn_colorhexa);
         // Pick image button click listener

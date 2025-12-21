@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -34,6 +35,10 @@ public class ChartsFragment extends Fragment {
     private Button uploadChartBtn;
     private Button generateBtn;
     private Bitmap originalBitmap;
+    private TextView headingChartsTxt;
+    private TextView descChartsTxt;
+    private TextView uploadChartTxt;
+
     private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
     private ColorblindnessSimulationView.ColorblindnessMode currentMode = ColorblindnessSimulationView.ColorblindnessMode.NONE;
     private static final String TAG = "ChartsFragment";
@@ -66,6 +71,9 @@ public class ChartsFragment extends Fragment {
         chartView = view.findViewById(R.id.chart_simulation_view);
         colorblindnessSpinner = view.findViewById(R.id.spinner_colorblindness);
         generateBtn = view.findViewById(R.id.btn_generate);
+        headingChartsTxt = view.findViewById(R.id.headingChartsTxt);
+        descChartsTxt = view.findViewById(R.id.descChartsTxt);
+        uploadChartTxt = view.findViewById(R.id.uploadChartTxt);
         
         // Setup upload button
         uploadChartBtn.setOnClickListener(v -> launchImagePicker());
@@ -84,8 +92,8 @@ public class ChartsFragment extends Fragment {
             android.R.layout.simple_spinner_item,
             new String[]{
                 "None (Normal Vision)",
-                "Deuteranopia (Red-Green, Green-sensitive)",
                 "Protanopia (Red-Green, Red-sensitive)",
+                "Deuteranopia (Red-Green, Green-sensitive)",
                 "Tritanopia (Blue-Yellow)"
             }
         );
