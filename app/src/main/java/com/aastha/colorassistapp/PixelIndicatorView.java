@@ -13,7 +13,7 @@ public class PixelIndicatorView extends View {
     private int hexColor = Color.BLACK;
     private String hexString = "#000000";
     private static final int RADIUS = 12; // 3-pixel radius = 6px diameter, scaled for visibility
-    private static final int INDICATOR_SIZE = 60; // Size of indicator square
+    private static final int INDICATOR_SIZE = 25; // Size of indicator square
     
     private Paint circlePaint;
     private Paint invertedSquarePaint;
@@ -49,11 +49,11 @@ public class PixelIndicatorView extends View {
         // Text paint for HEX value
         textPaint = new Paint();
         textPaint.setColor(Color.WHITE);
-        textPaint.setTextSize(20f);
+        textPaint.setTextSize(28f);
         textPaint.setStyle(Paint.Style.FILL);
         textPaint.setAntiAlias(true);
         textPaint.setTextAlign(Paint.Align.CENTER);
-        textPaint.setShadowLayer(3, 0, 0, Color.BLACK);
+        textPaint.setShadowLayer(8, 2, 2, Color.BLACK);
 
         // Border paint
         borderPaint = new Paint();
@@ -91,6 +91,7 @@ public class PixelIndicatorView extends View {
         // Draw inverted colored square
         int invertedColor = 0xFFFFFF ^ hexColor; // Bitwise XOR for inversion
         invertedSquarePaint.setColor(invertedColor);
+
 
         int squareLeft = tapX - (INDICATOR_SIZE / 2);
         int squareTop = tapY - (INDICATOR_SIZE / 2);

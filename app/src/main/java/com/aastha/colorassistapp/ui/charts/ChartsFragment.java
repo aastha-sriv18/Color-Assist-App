@@ -3,7 +3,6 @@ package com.aastha.colorassistapp.ui.charts;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.aastha.colorassistapp.R;
-import com.aastha.colorassistapp.ui.charts.ColorTransformer;
 
 import java.io.IOException;
 
@@ -170,34 +168,46 @@ public class ChartsFragment extends Fragment {
     }
 
     private void loadChartImage(Uri uri) {
-        try {
-            // Load bitmap from URI
-            originalBitmap = android.provider.MediaStore.Images.Media.getBitmap(
-                    requireContext().getContentResolver(), uri);
+        // Show loading state instantly
+        chartView.setBitmap(null);
 
-            // Scale down if too large
-            int maxDimension = 2048;
-            if (originalBitmap.getWidth() > maxDimension || originalBitmap.getHeight() > maxDimension) {
-                float scale = Math.min((float) maxDimension / originalBitmap.getWidth(),
-                        (float) maxDimension / originalBitmap.getHeight());
-                int newWidth = (int) (originalBitmap.getWidth() * scale);
-                int newHeight = (int) (originalBitmap.getHeight() * scale);
-                Bitmap scaledBitmap = Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, true);
-                originalBitmap.recycle();
-                originalBitmap = scaledBitmap;
+        // Load in background thread
+        new Thread(() -> {
+            try {
+                Bitmap bitmap = android.provider.MediaStore.Images.Media.getBitmap(
+                        requireContext().getContentResolver(), uri);
+
+                // Scale down if too large (original method - works reliably)
+                int maxDimension = 2048;
+                if (bitmap.getWidth() > maxDimension || bitmap.getHeight() > maxDimension) {
+                    float scale = Math.min((float) maxDimension / bitmap.getWidth(),
+                            (float) maxDimension / bitmap.getHeight());
+                    int newWidth = (int) (bitmap.getWidth() * scale);
+                    int newHeight = (int) (bitmap.getHeight() * scale);
+                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+                    bitmap.recycle();
+                    bitmap = scaledBitmap;
+                }
+
+                originalBitmap = bitmap;
+
+                // Update UI on main thread
+                requireActivity().runOnUiThread(() -> {
+                    chartView.setBitmap(originalBitmap);
+                    chartView.setColorblindnessMode(ColorblindnessSimulationView.ColorblindnessMode.NONE);
+                    updateGenerateButtonState();
+                    Toast.makeText(getContext(), "Chart loaded successfully", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "Chart loaded: " + originalBitmap.getWidth() + "x" + originalBitmap.getHeight());
+                });
+
+            } catch (IOException e) {
+                requireActivity().runOnUiThread(() -> {
+                    Toast.makeText(getContext(), "Error loading image", Toast.LENGTH_SHORT).show();
+                });
+                Log.e(TAG, "Error loading chart image", e);
             }
-
-            // Show ORIGINAL image immediately (no colorblindness effect)
-            chartView.setBitmap(originalBitmap);
-            chartView.setColorblindnessMode(ColorblindnessSimulationView.ColorblindnessMode.NONE);
-
-            Toast.makeText(getContext(), "Chart loaded successfully", Toast.LENGTH_SHORT).show();
-            updateGenerateButtonState();
-            Log.d(TAG, "Chart image loaded: " + originalBitmap.getWidth() + "x" + originalBitmap.getHeight());
-        } catch (IOException e) {
-            Log.e(TAG, "Error loading chart image", e);
-            Toast.makeText(getContext(), "Error loading image", Toast.LENGTH_SHORT).show();
-        }
+        }).start();
     }
+
 
 }
