@@ -61,6 +61,16 @@
                 android:textSize="12sp"
                 android:layout_marginTop="8dp"
                 android:textColor="@android:color/darker_gray" />
+            <!-- Generate Button -->
+            <Button
+                android:id="@+id/btn_generate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:padding="12dp"
+                android:text="Generate Chart"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
     </ScrollView>
@@ -71,7 +81,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@android:color/darker_gray">
+        android:background="@android:color/transparent">
 
         <com.aastha.colorassistapp.ui.charts.ColorblindnessSimulationView
             android:id="@+id/chart_simulation_view"

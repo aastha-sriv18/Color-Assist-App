@@ -34,16 +34,16 @@ public class ChartsFragment extends Fragment {
     private ColorblindnessSimulationView chartView;
     private Spinner colorblindnessSpinner;
     private Button uploadChartBtn;
+    private Button generateBtn;
     private Bitmap originalBitmap;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
     private ColorblindnessSimulationView.ColorblindnessMode currentMode = ColorblindnessSimulationView.ColorblindnessMode.NONE;
-
     private static final String TAG = "ChartsFragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        
         // Initialize the photo picker launcher
         pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
             if (uri != null) {
@@ -62,42 +62,46 @@ public class ChartsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        
         // Initialize views
         uploadChartBtn = view.findViewById(R.id.btn_upload_chart);
         chartView = view.findViewById(R.id.chart_simulation_view);
         colorblindnessSpinner = view.findViewById(R.id.spinner_colorblindness);
-
+        generateBtn = view.findViewById(R.id.btn_generate);
+        
         // Setup upload button
         uploadChartBtn.setOnClickListener(v -> launchImagePicker());
-
+        
+        // Setup generate button - initially disabled
+        generateBtn.setOnClickListener(v -> generateChart());
+        updateGenerateButtonState();
+        
         // Setup colorblindness spinner
         setupColorblindnessSpinner();
     }
 
     private void setupColorblindnessSpinner() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                getContext(),
-                android.R.layout.simple_spinner_item,
-                new String[]{
-                        "None (Normal Vision)",
-                        "Deuteranopia (Red-Green, Green-sensitive)",
-                        "Protanopia (Red-Green, Red-sensitive)",
-                        "Tritanopia (Blue-Yellow)"
-                }
+            getContext(),
+            android.R.layout.simple_spinner_item,
+            new String[]{
+                "None (Normal Vision)",
+                "Deuteranopia (Red-Green, Green-sensitive)",
+                "Protanopia (Red-Green, Red-sensitive)",
+                "Tritanopia (Blue-Yellow)"
+            }
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         colorblindnessSpinner.setAdapter(adapter);
-
         colorblindnessSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 updateColorblindnessMode(position);
+                updateGenerateButtonState();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 
@@ -116,30 +120,43 @@ public class ChartsFragment extends Fragment {
                 currentMode = ColorblindnessSimulationView.ColorblindnessMode.TRITANOPIA;
                 break;
         }
+        Log.d(TAG, "Colorblindness mode selected: " + currentMode);
+    }
 
-        // Update the chart view with new mode
-        if (originalBitmap != null) {
-            chartView.setColorblindnessMode(currentMode);
-            chartView.setBitmap(originalBitmap);
+    private void generateChart() {
+        if (originalBitmap == null) {
+            Toast.makeText(getContext(), "Please upload a chart image first", Toast.LENGTH_SHORT).show();
+            return;
         }
+        
+        // Apply current settings
+        chartView.setBitmap(originalBitmap);
+        chartView.setColorblindnessMode(currentMode);
+        
+        Toast.makeText(getContext(), "Chart generated with " + currentMode, Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "Chart generated with mode: " + currentMode);
+    }
 
-        Log.d(TAG, "Colorblindness mode changed to: " + currentMode);
+    private void updateGenerateButtonState() {
+        boolean enabled = originalBitmap != null;
+        generateBtn.setEnabled(enabled);
+        generateBtn.setAlpha(enabled ? 1.0f : 0.5f);
     }
 
     private void launchImagePicker() {
         // Request READ_MEDIA_IMAGES permission for API 33+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_IMAGES)
-                    != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.READ_MEDIA_IMAGES}, 100);
                 return;
             }
         }
-
+        
         // Launch photo picker
         pickMedia.launch(new PickVisualMediaRequest.Builder()
-                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-                .build());
+            .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+            .build());
     }
 
     @Override
@@ -156,27 +173,23 @@ public class ChartsFragment extends Fragment {
         try {
             // Load bitmap from URI
             originalBitmap = android.provider.MediaStore.Images.Media.getBitmap(
-                    requireContext().getContentResolver(), uri);
-
+                requireContext().getContentResolver(), uri);
+            
             // Scale down if too large
             int maxDimension = 2048;
             if (originalBitmap.getWidth() > maxDimension || originalBitmap.getHeight() > maxDimension) {
                 float scale = Math.min((float) maxDimension / originalBitmap.getWidth(),
-                        (float) maxDimension / originalBitmap.getHeight());
+                    (float) maxDimension / originalBitmap.getHeight());
                 int newWidth = (int) (originalBitmap.getWidth() * scale);
                 int newHeight = (int) (originalBitmap.getHeight() * scale);
                 Bitmap scaledBitmap = Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, true);
                 originalBitmap.recycle();
                 originalBitmap = scaledBitmap;
             }
-
-            // Set bitmap to chart view
-            chartView.setBitmap(originalBitmap);
-            chartView.setColorblindnessMode(currentMode);
-
+            
             Toast.makeText(getContext(), "Chart loaded successfully", Toast.LENGTH_SHORT).show();
+            updateGenerateButtonState();
             Log.d(TAG, "Chart image loaded: " + originalBitmap.getWidth() + "x" + originalBitmap.getHeight());
-
         } catch (IOException e) {
             Log.e(TAG, "Error loading chart image", e);
             Toast.makeText(getContext(), "Error loading image", Toast.LENGTH_SHORT).show();
