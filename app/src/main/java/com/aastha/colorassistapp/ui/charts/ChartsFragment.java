@@ -173,20 +173,24 @@ public class ChartsFragment extends Fragment {
         try {
             // Load bitmap from URI
             originalBitmap = android.provider.MediaStore.Images.Media.getBitmap(
-                requireContext().getContentResolver(), uri);
-            
+                    requireContext().getContentResolver(), uri);
+
             // Scale down if too large
             int maxDimension = 2048;
             if (originalBitmap.getWidth() > maxDimension || originalBitmap.getHeight() > maxDimension) {
                 float scale = Math.min((float) maxDimension / originalBitmap.getWidth(),
-                    (float) maxDimension / originalBitmap.getHeight());
+                        (float) maxDimension / originalBitmap.getHeight());
                 int newWidth = (int) (originalBitmap.getWidth() * scale);
                 int newHeight = (int) (originalBitmap.getHeight() * scale);
                 Bitmap scaledBitmap = Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, true);
                 originalBitmap.recycle();
                 originalBitmap = scaledBitmap;
             }
-            
+
+            // Show ORIGINAL image immediately (no colorblindness effect)
+            chartView.setBitmap(originalBitmap);
+            chartView.setColorblindnessMode(ColorblindnessSimulationView.ColorblindnessMode.NONE);
+
             Toast.makeText(getContext(), "Chart loaded successfully", Toast.LENGTH_SHORT).show();
             updateGenerateButtonState();
             Log.d(TAG, "Chart image loaded: " + originalBitmap.getWidth() + "x" + originalBitmap.getHeight());
@@ -195,4 +199,5 @@ public class ChartsFragment extends Fragment {
             Toast.makeText(getContext(), "Error loading image", Toast.LENGTH_SHORT).show();
         }
     }
+
 }
