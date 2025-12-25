@@ -59,7 +59,7 @@ Results are converted into **clear numeric or labeled values** instead of raw co
 
 ## 📂 Project Structure
 
-
+```
 Color-Assist-App
 ├── app/                      # Main Android app source
 ├── gradle/                   # Gradle wrapper
@@ -67,7 +67,7 @@ Color-Assist-App
 ├── settings.gradle.kts
 ├── gradlew / gradlew.bat
 └── README.md
-
+```
 Source code:
 - Java files → `app/src/main/java`
 - Layouts & resources → `app/src/main/res`
