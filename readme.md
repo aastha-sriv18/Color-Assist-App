@@ -1,4 +1,3 @@
-```markdown
 # 🎨 Color Assist App
 
 An Android application designed to **assist color-blind users** by making color-dependent information easier to see, understand, and interpret.
@@ -60,7 +59,7 @@ Results are converted into **clear numeric or labeled values** instead of raw co
 
 ## 📂 Project Structure
 
-```
+
 
 Color-Assist-App
 ├── app/                      # Main Android app source
