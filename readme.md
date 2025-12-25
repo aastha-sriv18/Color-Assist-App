@@ -60,7 +60,6 @@ Results are converted into **clear numeric or labeled values** instead of raw co
 ## 📂 Project Structure
 
 
-
 Color-Assist-App
 ├── app/                      # Main Android app source
 ├── gradle/                   # Gradle wrapper
@@ -68,8 +67,6 @@ Color-Assist-App
 ├── settings.gradle.kts
 ├── gradlew / gradlew.bat
 └── README.md
-
-````
 
 Source code:
 - Java files → `app/src/main/java`
@@ -86,7 +83,7 @@ Source code:
 
 ```bash
 git clone https://github.com/aastha-sriv18/Color-Assist-App.git
-````
+```
 
 1. Open the project in Android Studio
 2. Let Gradle sync
@@ -94,10 +91,9 @@ git clone https://github.com/aastha-sriv18/Color-Assist-App.git
 
 ## 🚧 Future Improvements
 
-* Better region selection for image analysis
-* Expanded OCR language support
-* More test strip calibration profiles
 * Accessibility-first UI refinements
+* Google Play Store release!
+* Live camera feed addition.
 
 ## 🤝 Contributing
 
