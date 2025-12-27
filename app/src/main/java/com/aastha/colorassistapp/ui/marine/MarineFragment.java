@@ -26,6 +26,8 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+
+
 import com.aastha.colorassistapp.R;
 
 import java.io.IOException;
@@ -60,6 +62,8 @@ public class MarineFragment extends Fragment {
         infoText = view.findViewById(R.id.infoText);
 
         imageViewMarine.setVisibility(View.GONE);
+        generateBtn.setEnabled(false);
+        generateBtn.setAlpha(0.5f);
 
         pickMedia = registerForActivityResult(
                 new ActivityResultContracts.PickVisualMedia(),
@@ -85,6 +89,12 @@ public class MarineFragment extends Fragment {
 
         generateBtn.setOnClickListener(v -> runTest());
     }
+    private void updateGenerateButtonState() {
+        boolean enabled = currentBitmap != null;
+        generateBtn.setEnabled(enabled);
+        generateBtn.setAlpha(enabled ? 1.0f : 0.5f);
+    }
+
 
     private void setupSpinner() {
         if (getContext() == null) return;
@@ -143,6 +153,7 @@ public class MarineFragment extends Fragment {
             currentBitmap = android.provider.MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), uri);
             imageViewMarine.setImageBitmap(currentBitmap);
             imageViewMarine.setVisibility(View.VISIBLE);
+            updateGenerateButtonState();
             infoText.setText("Tap on the image to select a test color");
         } catch (IOException e) {
             Log.e("MarineFragment", "Error loading image", e);
@@ -354,7 +365,7 @@ public class MarineFragment extends Fragment {
             return "Light Gray";
         }
 
-// REDS & ORANGES
+    // REDS & ORANGES
         if (hue < 5) return "Red";
         if (hue < 10) return (val > 0.7f) ? "Light Red" : "Dark Red";
         if (hue < 20) return "Coral";
@@ -367,7 +378,7 @@ public class MarineFragment extends Fragment {
         if (hue < 58) return "Yellow";
         if (hue < 60) return (val > 0.7f) ? "Light Yellow" : "Mustard";
 
-// GREENS
+    // GREENS
         if (hue < 65) return "Yellow Green";
         if (hue < 70) return "Olive";
         if (hue < 80) return "Lime";
@@ -378,7 +389,7 @@ public class MarineFragment extends Fragment {
         if (hue < 155) return "Cyan";
         if (hue < 160) return "Aqua";
 
-// BLUES
+    // BLUES
         if (hue < 180) return "Sky Blue";
         if (hue < 200) return "Light Blue";
         if (hue < 220) return "Blue";
@@ -386,14 +397,14 @@ public class MarineFragment extends Fragment {
         if (hue < 240) return "Dark Blue";
         if (hue < 250) return "Indigo";
 
-// PURPLES
+    // PURPLES
         if (hue < 260) return "Violet";
         if (hue < 270) return "Light Purple";
         if (hue < 275) return "Lavender";
         if (hue < 285) return "Purple";
         if (hue < 290) return "Dark Purple";
 
-// PINKS & RED-PURPLE RANGE
+    // PINKS & RED-PURPLE RANGE
         if (hue < 300) return "Rose";
         if (hue < 310) return "Light Pink";
         if (hue < 320) return "Rose Pink";
@@ -401,13 +412,12 @@ public class MarineFragment extends Fragment {
         if (hue < 340) return "Fuchsia";
         if (hue < 350) return "Maroon";
 
-// NEUTRALS & EARTH TONES
+    // NEUTRALS & EARTH TONES
         if (hue >= 350 && hue <= 360) return "Brown"; // reddish-brown tone region
         if (sat < 0.05f && val > 0.95f) return "Colorless"; // near transparent water-like color
 
-// Default fallback
+    // Default fallback
         return "Colorless";
-
-
     }
+
 }

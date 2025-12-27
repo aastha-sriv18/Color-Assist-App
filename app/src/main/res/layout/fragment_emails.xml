@@ -10,22 +10,19 @@
     <!-- TODO: Update blank fragment layout -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="80dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
             android:orientation="vertical"
-            android:padding="2dp">
+            android:padding="16dp">
 
             <TextView
                 android:id="@+id/headingEmailTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="40dp"
-                android:layout_marginRight="12dp"
                 android:text="Easy Emails"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -34,18 +31,14 @@
                 android:id="@+id/descEmailTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="12dp"
                 android:text="Transforms formatted or color-highlighted emails into clean, easy-to-read text." />
 
             <TextView
                 android:id="@+id/uploadImageTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="12dp"
                 android:text="Upload Image" />
 
             <Button
@@ -91,9 +84,7 @@
                 android:id="@+id/resultTxtEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="12dp"
                 android:layout_marginBottom="70dp"
                 android:text="Result will appear here!" />
 

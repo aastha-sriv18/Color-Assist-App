@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="80dp"
     tools:context=".ui.charts.ChartsFragment">
 
     <!-- Top controls: scroll if needed -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:paddingTop="80dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -60,16 +60,16 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginBottom="12dp"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:text="Vision Mode:"
-                    android:textSize="14sp"
-                    android:layout_marginEnd="8dp" />
+                    android:textSize="14sp" />
 
                 <Spinner
                     android:id="@+id/spinner_colorblindness"
@@ -83,12 +83,13 @@
                 android:id="@+id/info_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="Upload a chart and select a vision mode. Pinch to zoom, swipe to pan."
                 android:textAlignment="center"
-                android:textSize="12sp"
-                android:layout_marginTop="8dp"
-                android:textColor="@android:color/darker_gray" />
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp" />
             <!-- Generate Button -->
+
             <Button
                 android:id="@+id/btn_generate"
                 android:layout_width="match_parent"
@@ -104,13 +105,14 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Bottom: full zoomable chart area, not inside ScrollView -->
     <FrameLayout
         android:id="@+id/chart_container"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@android:color/transparent">
+        android:background="@android:color/transparent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
         <com.aastha.colorassistapp.ui.charts.ColorblindnessSimulationView
             android:id="@+id/chart_simulation_view"
@@ -118,5 +120,7 @@
             android:layout_height="match_parent"
             android:contentDescription="@string/app_name" />
     </FrameLayout>
+
+    <!-- Bottom: full zoomable chart area, not inside ScrollView -->
 
 </LinearLayout>

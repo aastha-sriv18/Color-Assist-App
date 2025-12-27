@@ -49,7 +49,7 @@
                 android:text="Tap on the image to pick colors"
                 android:textAlignment="center"
                 android:textColor="@android:color/darker_gray"
-                android:textSize="16sp" />
+                android:textSize="12sp" />
 
             <FrameLayout
                 android:id="@+id/image_container"

@@ -70,6 +70,9 @@ public class EmailsFragment extends Fragment {
 
         // ImageView stays hidden at start (defined in XML)
         imageViewEmail.setVisibility(View.GONE);
+        generateBtnEmail.setEnabled(false);
+        generateBtnEmail.setAlpha(0.5f);
+
 
         // Upload image
         uploadMailsButton.setOnClickListener(v -> launchPhotoPicker());
@@ -106,6 +109,8 @@ public class EmailsFragment extends Fragment {
             // ✅ Show ImageView once image is loaded
             imageViewEmail.setImageBitmap(currentBitmap);
             imageViewEmail.setVisibility(View.VISIBLE);
+            updateGenerateButtonState();
+
 
             resultTxtEmail.setText("Image loaded. Tap Extract Text to start OCR.");
         } catch (IOException e) {
@@ -153,4 +158,10 @@ public class EmailsFragment extends Fragment {
             Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
         }
     }
+    private void updateGenerateButtonState() {
+        boolean enabled = currentBitmap != null;
+        generateBtnEmail.setEnabled(enabled);
+        generateBtnEmail.setAlpha(enabled ? 1.0f : 0.5f);
+    }
+
 }
