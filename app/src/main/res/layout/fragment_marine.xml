@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
-                android:text="Simplifies color-based marine biology tests like pH, ammonia, nitrate, nitrite and chlorophyll readings." />
+                android:text="Makes color-based marine water tests easy to interpret — including pH, ammonia, nitrate, nitrite, and chlorophyll levels." />
 
             <TextView
                 android:id="@+id/uploadTxt"
