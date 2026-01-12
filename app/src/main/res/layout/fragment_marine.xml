@@ -68,13 +68,12 @@
                     tools:src="@tools:sample/avatars" />
 
                 <!-- Tap indicator (a visible small circle) -->
-                <View
-                    android:id="@+id/tapIndicator"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="top|left"
-                    android:background="@drawable/indicator_circle"
-                    android:visibility="gone" />
+                <com.aastha.colorassistapp.PixelIndicatorView
+                    android:id="@+id/pixel_indicator_marine"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"/>
+
             </FrameLayout>
 
             <LinearLayout

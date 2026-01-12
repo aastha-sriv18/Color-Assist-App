@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.aastha.colorassistapp.PixelIndicatorView;
+
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
@@ -41,7 +43,8 @@ public class MarineFragment extends Fragment {
     private Uri selectedImageUri;
     private String selectedTest = "";
     private Bitmap currentBitmap;
-    private View tapIndicator;
+    private PixelIndicatorView pixelIndicator;
+
     private int selectedColor = 0;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
 
@@ -58,7 +61,8 @@ public class MarineFragment extends Fragment {
         imageViewMarine = view.findViewById(R.id.imageViewMarine);
         spinner = view.findViewById(R.id.dropdown);
         generateBtn = view.findViewById(R.id.generateBtn);
-        tapIndicator = view.findViewById(R.id.tapIndicator);
+        pixelIndicator = view.findViewById(R.id.pixel_indicator_marine);
+
         infoText = view.findViewById(R.id.infoText);
 
         imageViewMarine.setVisibility(View.GONE);
@@ -152,6 +156,8 @@ public class MarineFragment extends Fragment {
         try {
             currentBitmap = android.provider.MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), uri);
             imageViewMarine.setImageBitmap(currentBitmap);
+            if (pixelIndicator != null) pixelIndicator.clearIndicator();
+
             imageViewMarine.setVisibility(View.VISIBLE);
             updateGenerateButtonState();
             infoText.setText("Tap on the image to select a test color");
@@ -180,9 +186,10 @@ public class MarineFragment extends Fragment {
 
         selectedColor = getAverageColorInRadius(bitmapX, bitmapY, 3);
 
-        tapIndicator.setVisibility(View.VISIBLE);
-        tapIndicator.setX(tapX - tapIndicator.getWidth() / 2f);
-        tapIndicator.setY(tapY - tapIndicator.getHeight() / 2f);
+        String hexColor = colorToHex(selectedColor);
+        pixelIndicator.setVisibility(View.VISIBLE);
+        pixelIndicator.updateIndicator((int) tapX, (int) tapY, selectedColor, hexColor);
+
     }
 
     private int getAverageColorInRadius(int centerX, int centerY, int radius) {
@@ -281,15 +288,15 @@ public class MarineFragment extends Fragment {
         String nearest = getNearestColorName(color).toLowerCase();
 
 
-        if (nearest.contains("bright yellow") || nearest.contains("yellow") || nearest.contains("lemon yellow") || nearest.contains("golden yellow"))
+        if (nearest.contains("bright yellow") || nearest.contains("yellow") || nearest.contains("lemon yellow") || nearest.contains("golden yellow") || nearest.contains("chartreuse"))
             return "Safe: Ammonia levels are very low or negligible. Water quality is excellent for aquatic life.";
-        else if (nearest.contains("pastel yellow") || nearest.contains("pale yellow green") || nearest.contains("light green yellow") || nearest.contains("olive") || nearest.contains("light yellow"))
+        else if (nearest.contains("pastel yellow") || nearest.contains("olivine") || nearest.contains("lime") || nearest.contains("pale yellow green") || nearest.contains("light green yellow") || nearest.contains("olive") || nearest.contains("light yellow"))
             return "Slightly Elevated: Minor traces of ammonia; generally safe but monitor regularly.";
-        else if (nearest.contains("yellow green") || nearest.contains("inchworm") || nearest.contains("Chartreuse") || nearest.contains("teal") || nearest.contains("light green"))
+        else if (nearest.contains("yellow green") || nearest.contains("kelly green") || nearest.contains("green") || nearest.contains("spring green") || nearest.contains("inchworm") || nearest.contains("light green"))
             return "Moderate: Ammonia levels are increasing; can start to stress sensitive fish or aquatic organisms. Partial water change recommended.";
-        else if (nearest.contains("light olive green") || nearest.contains("olivine") || nearest.contains("moss green"))
+        else if (nearest.contains("light olive green") || nearest.contains("moss green") || nearest.contains("emerald") || nearest.contains("teal"))
             return "High: Toxic ammonia concentration. Immediate action needed (water change, filtration improvement, reduce feeding).";
-        else if (nearest.contains("medium green") || nearest.contains("green") || nearest.contains("fern green") || nearest.contains("dark moss green") || nearest.contains("blue green"))
+        else if (nearest.contains("medium green") || nearest.contains("deep aqua") || nearest.contains("fern green") || nearest.contains("dark moss green") || nearest.contains("blue green"))
             return "Very High: Dangerous level. Can cause severe stress, gill damage, or death in fish. Urgent corrective action required.";
         else
             return "Ammonia range indeterminate.";
@@ -299,19 +306,20 @@ public class MarineFragment extends Fragment {
         String nearest = getNearestColorName(color).toLowerCase();
 
 
-        if (nearest.contains("white") || nearest.contains("light cyan") || nearest.contains("sky blue") || nearest.contains("pale lavender blue"))
+        if (nearest.contains("white") || nearest.contains("aquamarine") || nearest.contains("light cyan") || nearest.contains("sky blue") || nearest.contains("pale lavender blue"))
             return "Safe: Very low nitrite. The only safe level for a cycled tank.";
-        else if (nearest.contains("very pale pink") || nearest.contains("light violet"))
-            return "Stressful: Nitrite levels increasing. Minor toxicity; monitor closely.";
-        else if (nearest.contains("pale pink") || nearest.contains("soft pinkish purple") || nearest.contains("medium magenta"))
-            return "Unsafe: Nitrite levels increasing. Perform a water change.";
+        else if (nearest.contains("very pale pink") || nearest.contains("light violet") || nearest.contains("turquoise"))
+            return "Slight elevation: Minor toxicity; monitor closely.";
+        else if (nearest.contains("pale pink") || nearest.contains("violet") || nearest.contains("soft pinkish purple") || nearest.contains("medium magenta") || nearest.contains("medium purple"))
+            return "Moderate: Nitrite levels increasing. Perform a water change.";
         else if (nearest.contains("pink") || nearest.contains("deep fuchsia pink"))
             return "Dangerous: High toxicity; fish will show signs of gasping.";
-        else if (nearest.contains("magenta") || nearest.contains("bright reddish pink") || nearest.contains("reddish magenta"))
-            return "Toxic: Extremely high nitrite. Severe danger; immediate intervention needed.";
-        else if (nearest.contains("deep purple") || nearest.contains("dark purple") || nearest.contains("purple") || nearest.contains("dark pinkish red") || nearest.contains("deep crimson red"))
+        else if (nearest.contains("deep purple") || nearest.contains("magenta") || nearest.contains("bright reddish pink") || nearest.contains("reddish magenta"))
+            return "Toxic: High nitrite levels. Severe danger; immediate intervention needed.";
+        else if (nearest.contains("dark magenta") || nearest.contains("dark pinkish red") || nearest.contains("deep crimson red"))
             return "Lethal: Extremely high nitrite. Most fish will not survive this.";
-        else return "Nitrite range indeterminate.";
+        else
+            return "Nitrite range indeterminate.";
     }
 
     private String interpretNitrate(int color) {
@@ -324,11 +332,12 @@ public class MarineFragment extends Fragment {
             return "Caution: Nitrate levels increasing. Acceptable short-term, but long-term exposure can stress aquatic organisms. Partial water change advised.";
         else if (nearest.contains("tangerine"))
             return "Unsafe: Nitrate levels increasing. Perform a 25% water change.";
-        else if (nearest.contains("tomato red") || nearest.contains("scarlet red"))
+        else if (nearest.contains("tomato") || nearest.contains("scarlet red"))
             return "Dangerous: Perform a 50% water change immediately";
-        else if (nearest.contains("crimson") || nearest.contains("dark crimson") || nearest.contains("dark pinkish red"))
+        else if (nearest.contains("crimson") || nearest.contains("dark crimson") || nearest.contains("dark pinkish red")|| nearest.contains("maroon"))
             return "Toxic: Extremely high nitrate. Immediate large water change and system cleaning required.";
-        else return "Nitrate range indeterminate.";
+        else
+            return "Nitrate level indeterminate.";
     }
 
     private String interpretChlorophyll(int color) {
@@ -345,7 +354,8 @@ public class MarineFragment extends Fragment {
             return "High Chlorophyll: Plants have excess nitrogen and dark green leaves; water favors hardy, plankton-feeding fish with some oxygen risk.";
         else if (nearest.contains("brown") || nearest.contains("blue green"))
             return "Very High Chlorophyll: Plants suffer from nitrogen toxicity; water has algal blooms causing stress or mortality in fish.";
-        else return "Chlorophyll level indeterminate.";
+        else
+            return "Chlorophyll level indeterminate.";
     }
 
 
@@ -363,84 +373,67 @@ public class MarineFragment extends Fragment {
         float[] hsv = new float[3];
         android.graphics.Color.colorToHSV(color, hsv);
 
-        // ⚪ Fast grayscale detection
-        if (hsv[1] < 0.08f) {
-            if (hsv[2] > 0.92f) return "white";
-            if (hsv[2] > 0.7f)  return "very pale pink";
-            if (hsv[2] > 0.4f)  return "pale pink";
-            return "brown";
+        // Improved grayscale / neutral color detection
+        if (hsv[1] < 0.10f) {  // Very low saturation → nearly gray/neutral
+            float value = hsv[2];
+            if (value > 0.92f) return "White";
+            else if (value > 0.70f) return "Light Gray";
+            else if (value > 0.40f) return "Gray";
+            else if (value > 0.15f) return "Dark Gray";
+            else return "Black";
         }
+
 
         // name, H, S, V (parallel arrays for speed)
         final String[] names = {
-                "Red","Dark Red","Tomato","Crimson","Orange Red","Coral","Maroon",
-                "Orange","Carrot Orange","Gold","Goldenrod","Yellow","Bright Yellow",
-                "Lemon Yellow","Golden Yellow","Light Yellow","Pastel Yellow","Yellow Orange",
-                "Green Yellow","Yellow Green","Inchworm","Chartreuse","Lime Green",
-                "Pure Green","Green","Medium Green","Light Green","Pale Green","Emerald",
-                "Fern Green","Moss Green","Dark Moss Green","Olive","Olivine","Light Olive Green",
-                "Cyan","Teal","Teal Blue","Blue Green","Aquamarine","Turquoise",
-                "Light Blue","Sky Blue","Blue","Royal Blue","Dark Blue","Indigo Blue","Indigo",
-                "Violet","Blue Violet","Purple","Medium Purple","Deep Purple","Dark Purple",
-                "Magenta","Deep Pink","Pink","Pale Pink","Very Pale Pink","Rose",
-                "White","Brown","Light Cyan", "Pale Lavender Blue", "Light Violet",
-                "Soft Pinkish Purple", "Medium Magenta", "Deep Fuchsia Pink", "Bright Reddish Pink",
-                "Reddish Magenta", "Dark Pinkish Red", "Deep Crimson Red", "Bright Lemon Yellow",
-                "Light Golden Yellow", "Sunflower Yellow", "Amber", "Tangerine", "Scarlet Red", "Dark Crimson"
+                "Red","Dark Red","Tomato","Crimson","Orange Red","Coral","Maroon", "Orange","Carrot Orange","Gold",
+                "Goldenrod","Yellow","Bright Yellow", "Lemon Yellow","Golden Yellow","Light Yellow","Pastel Yellow","Yellow Orange", "Green Yellow","Yellow Green",
+                "Inchworm","Chartreuse","Lime Green", "Pure Green","Green","Medium Green","Light Green","Pale Green","Emerald", "Fern Green",
+                "Moss Green","Dark Moss Green","Olive","Olivine","Light Olive Green", "Cyan","Teal","Teal Blue","Blue Green","Aquamarine",
+                "Turquoise", "Light Blue","Sky Blue","Blue","Royal Blue","Dark Blue","Indigo Blue","Indigo", "Violet","Blue Violet",
+                "Dark Magenta","Purple","Medium Purple","Deep Purple", "Magenta","Deep Pink","Pink","Pale Pink","Very Pale Pink","Rose",
+                "White","Brown","Light Cyan", "Pale Lavender Blue", "Light Violet", "Soft Pinkish Purple", "Medium Magenta", "Deep Fuchsia Pink", "Bright Reddish Pink", "Reddish Magenta",
+                "Dark Pinkish Red", "Deep Crimson Red", "Bright Lemon Yellow", "Light Golden Yellow", "Sunflower Yellow", "Amber", "Tangerine", "Scarlet Red", "Dark Crimson", "Lime",
+                "Spring Green", "Kelly Green", "Deep Aqua"
 
         };
 
         final float[] H = {
-                0,0,9,348,16,16,0,
-                30,28,51,43,60,60,
-                58,52,60,60,45,
-                75,85,90,90,120,
-                120,120,120,120,120,140,
-                110,95,95,60,80,75,
-                180,180,190,170,160,174,
-                200,197,240,225,240,260,275,
-                270,275,285,290,285,285,
-                300,330,350,350,350,345,
-                0,30, 180f,220f,270f, 295f,
-                300f, 315f,345f, 330f, 350f,
-                355f, 58f,50f, 54f, 45f, 25f,
-                8f, 350f
+                0,0,9,348,16,16,0,30,28,51,
+                43,60,60,58,52,60,60,45,75,85,
+                90,90,120,120,120,120,120,120,140,110,
+                95,95,60,80,75,180,180,190,170,160,
+                174,200,195,240,225,240,260,275,275f,275,
+                300f,285,290,285,300,330,350,350,350,345,
+                0,30,180f,220f,270f,295f,300f, 315f,345f, 330f,
+                350f,355f,58f,50f,54f,45f,25f,8f,350f,85f,
+                100f, 120f, 175f
 
         };
 
         final float[] S = {
-                1,1,0.72f,0.83f,1,0.68f,1,
-                1,0.85f,1,0.74f,1,1,
-                0.9f,0.95f,0.25f,0.3f,1,
-                1,1,0.75f,1,1,
-                1,0.8f,0.7f,0.4f,0.3f,0.8f,
-                0.6f,0.6f,0.7f,0.8f,0.55f,0.4f,
-                1,0.8f,0.8f,0.7f,0.5f,0.72f,
-                0.4f,0.71f,1,0.73f,1,0.8f,0.75f,
-                0.6f,0.76f,0.8f,0.5f,0.85f,0.9f,
-                1,0.9f,0.4f,0.25f,0.15f,0.6f,
-                0,0.8f, 0.25f, 0.35f, 0.45f, 0.45f, 0.65f,
-                0.85f, 0.85f, 0.8f, 0.75f, 0.9f,
-                1f, 0.6f, 0.9f, 0.95f, 0.9f,
-                1f, 0.85f
+                1, 1, 0.72f, 0.83f, 1, 0.68f, 1, 1, 0.85f, 1,
+                0.74f, 1, 1, 0.9f, 0.95f, 0.25f, 0.3f, 1, 1, 1,
+                0.75f, 1, 1, 1, 0.8f, 0.7f, 0.4f, 0.3f, 0.8f, 0.6f,
+                0.6f, 0.7f, 0.8f, 0.55f, 0.4f, 1, 0.8f, 0.8f, 0.7f, 0.5f,
+                0.72f, 0.4f, 0.40f, 1, 0.73f, 1, 0.8f, 0.75f, 0.55f, 0.76f,
+                0.75f, 0.8f, 0.5f, 0.65f, 1, 0.9f, 0.4f, 0.25f, 0.15f, 0.6f,
+                0,0.8f, 0.25f, 0.35f, 0.45f, 0.45f, 0.65f, 0.85f, 0.85f, 0.8f,
+                0.75f, 0.9f, 1f, 0.6f, 0.9f, 0.95f, 0.9f, 1f, 0.85f, 0.80f,
+                0.75f, 0.80f, 0.80f
 
         };
 
         final float[] V = {
-                1,0.55f,1,0.86f,1,1,0.4f,
-                1,0.9f,1,0.85f,1,1,
-                1,0.95f,1,0.97f,1,
-                1,1,0.9f,1,1,
-                1,0.8f,0.7f,1,0.9f,0.8f,
-                0.5f,0.5f,0.35f,0.5f,0.7f,0.8f,
-                1,0.6f,0.7f,0.7f,1,0.88f,
-                1,0.9f,1,0.88f,0.5f,0.5f,0.5f,
-                0.9f,0.85f,0.7f,0.85f,0.4f,0.3f,
-                1,1,1,1,1,0.8f,1,0.4f, 1f,
-                0.95f, 0.9f, 0.85f, 0.8f,
-                0.8f, 1f, 0.9f, 0.75f, 0.5f,
-                1f, 0.95f, 0.95f, 0.95f, 1f,
-                1f, 0.4f
+                1, 0.55f, 1, 0.86f, 1, 1, 0.4f, 1, 0.9f, 1,
+                0.85f, 1, 1, 1, 0.95f, 1, 0.97f, 1, 1, 1,
+                0.9f, 1, 1, 1, 0.8f, 0.7f, 1, 0.9f, 0.8f, 0.5f,
+                0.5f, 0.35f, 0.5f, 0.7f, 0.8f, 1, 0.6f, 0.7f, 0.7f, 1,
+                0.88f, 1, 1.00f, 1, 0.88f, 0.5f, 0.5f, 0.5f, 0.80f, 0.85f,
+                0.55f, 0.7f, 0.85f, 0.60f, 1, 1, 1, 1, 1, 0.8f,
+                1, 0.4f, 1f, 0.95f, 0.9f, 0.85f, 0.8f, 0.8f, 1f, 0.9f,
+                0.75f, 0.5f, 1f, 0.95f, 0.95f, 0.95f, 1f, 1f, 0.4f, 0.90f,
+                0.85f, 0.80f, 0.40f
 
         };
 
