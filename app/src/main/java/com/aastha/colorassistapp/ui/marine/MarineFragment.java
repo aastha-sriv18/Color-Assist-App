@@ -296,7 +296,7 @@ public class MarineFragment extends Fragment {
             return "Moderate: Ammonia levels are increasing; can start to stress sensitive fish or aquatic organisms. Partial water change recommended.";
         else if (nearest.contains("light olive green") || nearest.contains("moss green") || nearest.contains("emerald") || nearest.contains("teal"))
             return "High: Toxic ammonia concentration. Immediate action needed (water change, filtration improvement, reduce feeding).";
-        else if (nearest.contains("medium green") || nearest.contains("deep aqua") || nearest.contains("fern green") || nearest.contains("dark moss green") || nearest.contains("blue green"))
+        else if (nearest.contains("medium green") || nearest.contains("very dark cyan") || nearest.contains("fern green") || nearest.contains("dark moss green") || nearest.contains("blue green"))
             return "Very High: Dangerous level. Can cause severe stress, gill damage, or death in fish. Urgent corrective action required.";
         else
             return "Ammonia range indeterminate.";
@@ -394,7 +394,7 @@ public class MarineFragment extends Fragment {
                 "Dark Magenta","Purple","Medium Purple","Deep Purple", "Magenta","Deep Pink","Pink","Pale Pink","Very Pale Pink","Rose",
                 "White","Brown","Light Cyan", "Pale Lavender Blue", "Light Violet", "Soft Pinkish Purple", "Medium Magenta", "Deep Fuchsia Pink", "Bright Reddish Pink", "Reddish Magenta",
                 "Dark Pinkish Red", "Deep Crimson Red", "Bright Lemon Yellow", "Light Golden Yellow", "Sunflower Yellow", "Amber", "Tangerine", "Scarlet Red", "Dark Crimson", "Lime",
-                "Spring Green", "Kelly Green", "Deep Aqua"
+                "Spring Green", "Kelly Green", "Deep Aqua","Very Dark Cyan"
 
         };
 
@@ -407,7 +407,7 @@ public class MarineFragment extends Fragment {
                 300f,285,290,285,300,330,350,350,350,345,
                 0,30,180f,220f,270f,295f,300f, 315f,345f, 330f,
                 350f,355f,58f,50f,54f,45f,25f,8f,350f,85f,
-                100f, 120f, 175f
+                100f, 120f, 180f, 145.3f
 
         };
 
@@ -420,7 +420,7 @@ public class MarineFragment extends Fragment {
                 0.75f, 0.8f, 0.5f, 0.65f, 1, 0.9f, 0.4f, 0.25f, 0.15f, 0.6f,
                 0,0.8f, 0.25f, 0.35f, 0.45f, 0.45f, 0.65f, 0.85f, 0.85f, 0.8f,
                 0.75f, 0.9f, 1f, 0.6f, 0.9f, 0.95f, 0.9f, 1f, 0.85f, 0.80f,
-                0.75f, 0.80f, 0.80f
+                0.75f, 0.80f, 1.0f, 1.0f
 
         };
 
@@ -433,7 +433,7 @@ public class MarineFragment extends Fragment {
                 0.55f, 0.7f, 0.85f, 0.60f, 1, 1, 1, 1, 1, 0.8f,
                 1, 0.4f, 1f, 0.95f, 0.9f, 0.85f, 0.8f, 0.8f, 1f, 0.9f,
                 0.75f, 0.5f, 1f, 0.95f, 0.95f, 0.95f, 1f, 1f, 0.4f, 0.90f,
-                0.85f, 0.80f, 0.40f
+                0.85f, 0.80f, 0.545f, 0.251f
 
         };
 

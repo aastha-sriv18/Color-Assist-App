@@ -117,10 +117,10 @@ public class ChartsFragment extends Fragment {
                 currentMode = ColorblindnessSimulationView.ColorblindnessMode.NONE;
                 break;
             case 1:
-                currentMode = ColorblindnessSimulationView.ColorblindnessMode.DEUTERANOPIA;
+                currentMode = ColorblindnessSimulationView.ColorblindnessMode.PROTANOPIA;
                 break;
             case 2:
-                currentMode = ColorblindnessSimulationView.ColorblindnessMode.PROTANOPIA;
+                currentMode = ColorblindnessSimulationView.ColorblindnessMode.DEUTERANOPIA;
                 break;
             case 3:
                 currentMode = ColorblindnessSimulationView.ColorblindnessMode.TRITANOPIA;
